@@ -1,0 +1,53 @@
+services:
+  pgdatabase:
+    image: postgres:13
+    environment:
+      - POSTGRES_DB=ny_taxi
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root      
+    volumes: 
+      - "/postgres_data:/var/lib/postgresql/data:rw"
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=root
+    ports:
+      - "8080:80"
+  yellow_taxi_ingest:
+    build:
+      context: .
+      dockerfile: dockerfile_yellow
+    env_file:
+      - variables_yellow_taxi.env
+    depends_on:
+      pgdatabase:
+        condition: service_healthy     
+  green_taxi_ingest:
+    build:
+      context: .
+      dockerfile: dockerfile_green
+    env_file:
+      - variables_green_taxi.env
+    depends_on:
+      pgdatabase:
+        condition: service_healthy      
+  zones_ingest:
+    build:
+      context: .
+      dockerfile: dockerfile_zones
+    env_file:
+      - variables_zones.env
+    depends_on:
+      pgdatabase:
+        condition: service_healthy  
+      
+
+     
