@@ -1,0 +1,3 @@
+select count(*)
+from green_taxi_trips g
+where (date(g.lpep_dropoff_datetime) = '20190918' and date(g.lpep_pickup_datetime) = '20190918')

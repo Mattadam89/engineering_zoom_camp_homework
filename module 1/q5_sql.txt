@@ -1,0 +1,9 @@
+select 
+	l."Borough",
+	sum(g.total_amount)
+from green_taxi_trips g
+join lookup_zones l
+	on g."PULocationID" = l."LocationID"
+where date(g.lpep_pickup_datetime) = '20190918'
+group by l."Borough"
+having sum(g.total_amount) > 50000

@@ -1,0 +1,9 @@
+select *	
+from green_taxi_trips g
+join lookup_zones pickup
+	on g."PULocationID" = pickup."LocationID"
+join lookup_zones dropoff
+	on g."DOLocationID" = dropoff."LocationID"
+where (date(g.lpep_dropoff_datetime) >= '20190901' and date(g.lpep_pickup_datetime) < '20191001')
+	and pickup."Zone" = 'Astoria'
+order by g.tip_amount desc

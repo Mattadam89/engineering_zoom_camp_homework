@@ -1,0 +1,4 @@
+select *
+from green_taxi_trips g
+order by g.trip_distance desc
+limit 1
