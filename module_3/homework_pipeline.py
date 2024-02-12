@@ -42,14 +42,9 @@ def main():
 
     for x in range(1,13):
         ### change month variable for correct month to download files sequentially
-        if x < 10:
-            month = f'0{x}'
-            download_file(month)
-            upload_to_gcs(bucket_name, month)
-        else:
-            month = x
-            download_file(month)
-            upload_to_gcs(bucket_name, month)
+        month = f'{x:02d}'
+        download_file(month)
+        upload_to_gcs(bucket_name, month)
 
 main()
 
