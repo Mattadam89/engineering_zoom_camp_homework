@@ -1,0 +1,9 @@
+FROM python:3.9.1
+
+RUN pip install google-cloud-storage
+
+WORKDIR /app
+
+ADD . /app
+
+CMD [ "python", "homework_pipeline.py" ]
