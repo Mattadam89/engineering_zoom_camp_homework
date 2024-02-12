@@ -1,0 +1,8 @@
+I used a python script and and deployed this in a docker container to
+extract all the parquet files sequentially by month and then upload these
+to my GCS bucket for analysis in biquery
+
+python script is named homework_pipeline.py
+
+SQL used to perform the tasks and answer the questions for the home can be found
+in the homework_sql.sql file
