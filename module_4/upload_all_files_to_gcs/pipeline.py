@@ -5,7 +5,7 @@ from google.cloud import storage
 
 
 bucket_name = "zoom_camp_module_4"
-services = ['green', 'yellow', 'fhv']
+services = ['green', 'yellow']
 years = [2019, 2020]
 
 
@@ -18,7 +18,7 @@ def upload_to_gcs(bucket_name, month, file_name, filepath):
     bucket = storage_client.bucket(bucket_name)
 
     # print statement to check progress
-    print(f"uploading ny taxi data from 2022 for month {month} to bucket")
+    print(f"uploading ny taxi data to bucket")
 
     #upload the file to bucket
     blob = bucket.blob(filepath)
@@ -40,10 +40,23 @@ def send_csv_to_gcs(service, month, year):
     #read into data frame
     print("Converting to parquet...")
     df = pd.read_csv(file_name, compression='gzip')
+
+    #set types
+    df["VendorID"] = df["VendorID"].astype('Int64')
+    df["RatecodeID"] = df["RatecodeID"].astype('Int64')
+    df["PULocationID"] = df["PULocationID"].astype('Int64')
+    df["DOLocationID"] = df["DOLocationID"].astype('Int64')
+    df["passenger_count"] = df["passenger_count"].astype('Int64')
+    df["payment_type"] = df["payment_type"].astype('Int64')
+    if service == "green":
+        df["trip_type"] = df["trip_type"].astype('Int64')
+
+    #convert to paquet
     file_name = file_name.replace('.csv.gz', '.parquet')
     df.to_parquet(file_name, engine='pyarrow')
     print(f"Parquet: {file_name}")
 
+    #upload to gcs
     upload_to_gcs(bucket_name, month, file_name, f"{service}/{file_name}")
 
 
